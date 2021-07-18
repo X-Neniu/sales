@@ -1,0 +1,65 @@
+import React, { memo } from "react";
+import {
+  ZoomableGroup,
+  ComposableMap,
+  Geographies,
+  Geography
+} from "react-simple-maps";
+
+const geoUrl =
+  "https://raw.githubusercontent.com/zcreativelabs/react-simple-maps/master/topojson-maps/world-110m.json";
+
+
+
+const MapChart = ({ setTooltipContent }) => {
+  return (
+    <div style={{width:"500px", height:"300px", border:"1px solid black"}}>
+      <ComposableMap data-tip=""  style={{width:"100%", height:"100%"}} projection="geoEqualEarth" projectionConfig={{ scale: 200 }} >
+        <ZoomableGroup >
+          <Geographies geography={geoUrl}>
+            {({ geographies }) =>
+              geographies.map(geo => (
+                
+                <Geography
+                  
+                  key={geo.rsmKey}
+                  geography={geo}
+                  //fill={_click==0?"#D6D6DA":"#E42"}
+                  onMouseEnter={() => { 
+                    const { NAME, POP_EST, REGION_UN } = geo.properties;
+                    setTooltipContent(`${NAME}`);
+                  }}
+                  onMouseLeave={() => {
+                    setTooltipContent("");
+                  }}
+                  onClick={()=>{
+                      console.log(geo.properties.REGION_UN)
+                     
+                      
+                      
+                  }}
+                  style={{
+                    default: {
+                      fill: "#D6D6DA",
+                      outline: "none"
+                    },
+                    hover: {
+                      fill: "#F10",
+                      outline: "none"
+                    },
+                    pressed: {
+                      fill: "#E42",
+                      outline: "none"
+                    }
+                  }}
+                />
+              ))
+            }
+          </Geographies>
+        </ZoomableGroup>
+      </ComposableMap>
+    </div>
+  );
+};
+
+export default memo(MapChart);
